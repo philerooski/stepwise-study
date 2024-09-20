@@ -1,5 +1,8 @@
-0 2 * * * docker rm $(docker ps -aq)
-1 2 * * * yes | docker system prune
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
-0 * * * * docker pull philsnyder/synapsebridgehelpers:latest
-* * * * * docker run --rm philsnyder/synapsebridgehelpers:latest Rscript /root/synapsebridgehelpers/scripts/create_participant_account.R --inputTable syn25796203 --outputTable syn25796212 --app sage-mpower-2 --bridgeEmail 'phil.snyder[att]sagebase.org' --bridgePassword '' --synapseEmail 'phil.snyder[att]sagebase.org' --synapsePassword '' --study 'stepwise' --participantIdentifier externalId --phone phone_number --regionCode NL --dataGroups 'show_heartsnapshot,gr_SC_CS,gr_BR_AD,gr_DT_F,gr_ST_F' --statusField status --logField logs --supportEmail 'stepwise_support[att]synapse.org'
+3 * * * * docker container prune -f
+5 * * * * yes | docker system prune --volumes
+
+1 0 * * * docker pull philsnyder/synapsebridgehelpers:latest
+*/2 * * * * timeout 30s docker run --rm philsnyder/synapsebridgehelpers:latest Rscript /root/synapsebridgehelpers/scripts/create_participant_account.R --inputTable syn25796203 --outputTable syn25796212 --app sage-mpower-2 --bridgeEmail 'phil.snyder[att]sagebase.org' --bridgePassword 'pass' --synapseEmail 'phil.snyder[att]sagebase.org' --synapsePassword 'pass' --study 'stepwise' --participantIdentifier externalId --phone phone_number --regionCode NL --dataGroups 'show_heartsnapshot,gr_SC_CS,gr_BR_AD,gr_DT_F,gr_ST_F' --statusField status --logField logs --supportEmail 'stepwise_support[att]synapse.org'
